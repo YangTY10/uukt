@@ -237,6 +237,27 @@ for l in location_list:
                         conn.commit()
                         print("(room) Insert to mysql successfully!!")
 
+                ### 加分題 ###
+                room_price_list2 = []
+                    for i in room_price_list:
+                        i = int(i)
+                        room_price_list2.append(i)
+                
+                cpp = [room_price_list2[i:i+len(room_date_list)] for i in range(0, len(room_price_list2), len(room_date_list))]
+                    
+                for i in range(len(room_list)):
+                    
+                    j = {"hotel_name": name, "room": room_list[i], "max_price": max(cpp[i]),
+                        "min_price": min(cpp[i]), "price_count": len(cpp[0]) , "crawler_date": date}
+                    print(j)
+                    insertsql = "INSERT INTO db_uukt.plus (hotel_name, room_type, max_price, min_price, price_count, crawler_date)\
+                                 VALUES (%s, %s, %s, %s, %s, %s)"
+                    value = (j["hotel_name"], j["room"], j["max_price"], j["min_price"], j["price_count"], j["crawler_date"])
+                    cur.execute(insertsql, value)
+                    conn.commit()
+                    print("(plus) Insert to mysql successfully!!")
+
+
         n = nextpage("J-paginationjs-next")
         if n == True:
             next_page = driver.find_element_by_class_name("J-paginationjs-next")
